@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brooklyn Crime Watch - Surveillance System</title>
+    
+    <!-- Police badge favicon -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxmaWx0ZXIgaWQ9ImdlbG93Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMiIgcmVzdWx0PSJjb2xvcmVkQmx1ciIvPgogICAgICA8ZmVNZXJnZT4gCiAgICAgICAgPGZlTWVyZ2VOb2RlIGluPSJjb2xvcmVkQmx1ciIvPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPiAKICAgICAgPC9mZU1lcmdlPgogICAgPC9maWx0ZXI+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzE2MjEzZSIvPgogIDxnIGZpbHRlcj0idXJsKCNnZWxvdykiPgogICAgPHBhdGggZD0iTTE2IDNMMTkuNTEgMTAuNTFMMjcuNSAxMS4yN0wyMS43NSAxNkwyMy41IDI0TDE2IDE5Ljc1TDguNSAyNEwxMC4yNSAxNkw0LjUgMTEuMjdMMTIuNDkgMTAuNTFMMTYgM1oiIGZpbGw9IiMwMGZmODgiIHN0cm9rZT0iIzAwZmY4OCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8L2c+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iNCIgZmlsbD0iIzE2MjEzZSIgc3Ryb2tlPSIjMDBmZjg4IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8dGV4dCB4PSIxNiIgeT0iMTkiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMwMGZmODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkJXPC90ZXh0Pgo8L3N2Zz4K" type="image/svg+xml">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="eye-icon">👁</div>
+                    <h1>BROOKLYN WATCH</h1>
+                    <span class="subtitle">SURVEILLANCE SYSTEM</span>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="activeIncidents">0</span>
+                        <span class="stat-label">Active Incidents</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="dangerLevel">1</span>
+                        <span class="stat-label">Danger Level</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="system-info">
+                <h3>System Active</h3>
+                <p>Scanning area every 5 seconds</p>
+                <div class="status-indicator">
+                    <div class="pulse-dot"></div>
+                    <span>ONLINE</span>
+                </div>
+            </div>
+            <div class="social-link">
+                <a href="https://x.com/home" target="_blank" class="x-link">
+                    <svg class="x-icon" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="currentColor"/>
+                    </svg>
+                    <span>X.COM</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="map-overlay">
+                <div class="scanner-line"></div>
+            </div>
+        </div>
+
+        <!-- Incident Details Modal -->
+        <div id="incidentModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="incident-header">
+                    <h2 id="incidentTitle"></h2>
+                    <div class="danger-rating" id="incidentRating"></div>
+                </div>
+                <div class="incident-body">
+                    <div class="incident-image">
+                        <img id="incidentImg" src="" alt="Incident Photo">
+                    </div>
+                    <div class="incident-details">
+                        <p><strong>Time:</strong> <span id="incidentTime"></span></p>
+                        <p><strong>Address:</strong> <span id="incidentAddress"></span></p>
+                        <p><strong>Description:</strong> <span id="incidentDescription"></span></p>
+                        <p><strong>Status:</strong> <span id="incidentStatus" class="status-active">ACTIVE</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div id="notifications" class="notifications"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
